@@ -14,16 +14,43 @@ public class ContactManagement {
 
     public static Input ask = new Input();
     public static Path path = Paths.get("contacts.txt");
+    public static List<String> contacts;
 
     public static void mainMenu() {
-//        do {
+        do {
         System.out.println("1. View Contacts");
         System.out.println("2. Add a new Contact");
         System.out.println("3. Search a contact by name");
         System.out.println("4. Delete an existing contact");
         System.out.println("5. Exit");
         System.out.println("Enter an option (1,2,3,4 or 5)");
-//        }
+            int askInt = ask.getInt(1, 5);
+
+        switch (askInt) {
+            case 1:
+                viewContacts();
+                printContacts(contacts);
+                break;
+            case 2:
+                addContact();
+                break;
+            case 3:
+                searchContacts();
+                break;
+            case 4:
+//                deleteContacts();
+                break;
+            case 5:
+                System.out.println("Goodbye");
+                System.exit(0);
+                return;
+            }
+
+        }
+
+        while (ask.yesNo("Continue?")); {
+
+        }
     }
 
 
@@ -40,13 +67,21 @@ public class ContactManagement {
             return null;
         }
     }
-    public static List<String> contacts;
+
     public static List<String> viewContacts(){
         contacts = slurp();
+//        System.out.printf("%-15s | %s\n", "First Last", "PhoneNum");
+//        System.out.println("-----------------------------");
+//        for(String contact: contacts){
+//            String name = contact.substring(0, contact.indexOf("#"));
+//            String number = contact.substring(contact.indexOf("#")+1);
+//            System.out.printf("%-15s | %s\n", name, number);
+//            System.out.println("-----------------------------");
+//        }
 //        System.out.println(contacts);
         return contacts;
     }
-
+//
     public static void printContacts(List<String> contacts){
 //        viewContacts();
         System.out.printf("%-15s | %s\n", "First Last", "PhoneNum");
@@ -80,16 +115,18 @@ public class ContactManagement {
                 results.add(contact);
             }
         }
-//        printContacts(results);
+        printContacts(results);
     }
 
     public static void main(String[] args) {
-        slurp();
-        viewContacts();
-        printContacts(contacts);
-        addContact();
-        System.out.println("--reprint of contacts--------");
-        printContacts(contacts);
+//        slurp();
+//        viewContacts();
+//        printContacts(contacts);
+//        addContact();
+//        System.out.println("--reprint of contacts--------");
+//        printContacts(contacts);
+//        searchContacts();
+        mainMenu();
     }
 
 }
