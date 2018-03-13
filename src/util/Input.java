@@ -30,7 +30,7 @@ public class Input {
     /////////////////////////////////
 //    GET INT
     public int getInt() {
-        System.out.println("Enter an integer");
+//        System.out.println("Enter an integer");
         try {
             return Integer.parseInt(this.input.next());
         } catch(NumberFormatException e) {
