@@ -57,8 +57,7 @@ public class ContactManagement {
 
     public static List<String> slurp(){
         try {
-
-            System.out.println("slurp good to go");
+//            System.out.println("slurp good to go");
             return Files.readAllLines(Paths.get(String.valueOf(path)));
 
         }catch (IOException e){
@@ -70,15 +69,8 @@ public class ContactManagement {
 
     public static List<String> viewContacts(){
         contacts = slurp();
-//        System.out.printf("%-15s | %s\n", "First Last", "PhoneNum");
-//        System.out.println("-----------------------------");
-//        for(String contact: contacts){
-//            String name = contact.substring(0, contact.indexOf("#"));
-//            String number = contact.substring(contact.indexOf("#")+1);
-//            System.out.printf("%-15s | %s\n", name, number);
-//            System.out.println("-----------------------------");
-//        }
-//        System.out.println(contacts);
+
+        System.out.println(contacts);
         return contacts;
     }
 //
@@ -94,16 +86,52 @@ public class ContactManagement {
         }
     }
 
-    public static void addContact(){
+    public static void addContact() {
         List<String> newEntry = new ArrayList<>();
-        String entry = ask.getString("Enter your name: (First Last)") +" #"+ ask.getInt("Enter your phone number: ");
-        newEntry.add(entry);
+//        String entry = ask.getString("Enter your name: (First Last)") +" #"+ ask.getString("Enter your phone number: ");
+        String name = ask.getString("Enter your name: (First Last)");
+        String phoneNumber = ask.getString("Enter your Phone Number as numbers only.");
+        String entry;
+        int numOfDigits = phoneNumber.length();
+        boolean hasMoreDigits = false;
+        boolean hasLessDigits = false;
 
-        try {
-            //            modified from path variable
-            Files.write(Paths.get(String.valueOf(path)), newEntry, StandardOpenOption.APPEND);
-        }catch (IOException e){
-            System.out.println("Who Care!");
+//        checking number of digits
+        if (numOfDigits > 6) {
+            for (int i = 0; i < numOfDigits; ++i) {
+                if (numOfDigits < 10) {
+                    hasLessDigits = true;
+                } else if (numOfDigits > 10) {
+                    hasMoreDigits = true;
+                }
+
+                if (hasLessDigits && hasMoreDigits) {
+                    break; // check finished
+                }
+            }
+
+            if (hasMoreDigits) {
+                System.out.println
+                        ("Your phone number has more than 10 digits!");
+            } else if (hasLessDigits) {
+                System.out.println("Your phone number has less than 10 digits!");
+            } else {
+                System.out.println("Your phone number is 10 digits!");
+
+            }
+            phoneNumber = String.format(" #(%s)%s-%s",
+                    phoneNumber.substring(0, 3),
+                    phoneNumber.substring(3, 6),
+                    phoneNumber.substring(6));
+            entry = name + phoneNumber;
+            newEntry.add(entry);
+
+            try {
+
+                Files.write(Paths.get(String.valueOf(path)), newEntry, StandardOpenOption.APPEND);
+            } catch (IOException e) {
+                System.out.println("Who Care!");
+            }
         }
     }
 
@@ -127,6 +155,7 @@ public class ContactManagement {
         }        overwrite(results, false);
 
     }
+
     public static void overwrite(List<String> list, boolean append) {
         try {
             if (append) {
@@ -135,7 +164,7 @@ public class ContactManagement {
                 Files.write(Paths.get(String.valueOf(path)), list);
             }
         } catch (IOException e) {
-            System.out.println("Who Cares!");
+            System.out.println("WTF!");
         }
 
     }
