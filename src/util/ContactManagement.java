@@ -38,7 +38,7 @@ public class ContactManagement {
                 searchContacts();
                 break;
             case 4:
-//                deleteContacts();
+                deleteContacts();
                 break;
             case 5:
                 System.out.println("Goodbye");
@@ -116,6 +116,28 @@ public class ContactManagement {
             }
         }
         printContacts(results);
+    }
+    public static void deleteContacts() {
+        String name = ask.getString("What name would you like to remove?: ");
+        List<String> results = new ArrayList<>();
+        for (String contact : slurp()) {
+            if (!contact.contains(name)) {
+                results.add(contact);
+            }
+        }        overwrite(results, false);
+
+    }
+    public static void overwrite(List<String> list, boolean append) {
+        try {
+            if (append) {
+                Files.write(Paths.get(String.valueOf(path)), list, StandardOpenOption.APPEND);
+            } else {
+                Files.write(Paths.get(String.valueOf(path)), list);
+            }
+        } catch (IOException e) {
+            System.out.println("Who Cares!");
+        }
+
     }
 
     public static void main(String[] args) {
