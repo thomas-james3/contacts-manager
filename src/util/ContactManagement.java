@@ -119,10 +119,17 @@ public class ContactManagement {
                 System.out.println("Your phone number is 10 digits!");
 
             }
-            phoneNumber = String.format(" #(%s)%s-%s",
-                    phoneNumber.substring(0, 3),
-                    phoneNumber.substring(3, 6),
-                    phoneNumber.substring(6));
+//            formatting phone number 7 and 10 digit
+            if(numOfDigits == 10) {
+                phoneNumber = String.format(" #(%s)%s-%s",
+                        phoneNumber.substring(0, 3),
+                        phoneNumber.substring(3, 6),
+                        phoneNumber.substring(6));
+            }else if(numOfDigits == 7){
+                phoneNumber = String.format(" #%s-%s",
+                        phoneNumber.substring(0, 3),
+                        phoneNumber.substring(3, 7));
+            }else System.out.println("Error");
             entry = name + phoneNumber;
             newEntry.add(entry);
 
