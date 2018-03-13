@@ -1,92 +1,77 @@
 package util;
 
+
+import util.Input;
+
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Scanner;
 
 public class ContactManagement {
-    /**
-     * The application should be able to:
-     * Show all your contacts
-     * Add a new contact
-     * Search a contact by her name
-     * Delete an existing contact
-     * The application should keep its data in a file named contacts.txt so that the information persists between runs of the application.
-     */
 
-//    Show all contacts
-    public static List<String> showContacts(String filepath, String... more) {
-        List<String> data = new ArrayList<>();
+    public static Input ask = new Input();
+    public static String path = "src/contacts.txt";
+
+    public static void mainMenu(){
+        System.out.println("1. View Contacts");
+        System.out.println("2. Add a new Contact");
+        System.out.println("3. Search a contact by name");
+        System.out.println("4. Delete an existing contact");
+        System.out.println("5. Exit");
+        System.out.println("Enter an option (1,2,3,4 or 5)");
+    }
+
+    public static List<String> slurp(){
         try {
-            Path path = Paths.get(filepath, more);
-            System.out.println(path);
-            System.out.println(Files.exists(path));
-            data = Files.readAllLines(Paths.get(filepath, more));
-            for (int i = 0; i < data.size(); ++i) {
-                String line = data.get(i);
-                System.out.printf("%s: %s\n", i + 1, line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            return Files.readAllLines(Paths.get(path));
+        }catch (IOException e){
+            System.out.println(e);
             System.exit(1);
+            return null;
         }
-        return data;
+    }
+    public static void viewContacts(){
+        List<String> contacts = slurp();
+        printContacts(contacts);
     }
 
-//    Add a contact
-    public static void addContact(String filename, List<String> contents) {
-        try{
-            Files.write(Paths.get(filename), contents, StandardOpenOption.APPEND);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("WTF");
-            System.exit(1);
+    public static void printContacts(List<String> contacts){
+        System.out.printf("%-15s | %s\n", "First Last", "PhoneNum");
+        System.out.println("-----------------------------");
+        for(String contact: contacts){
+            String name = contact.substring(0, contact.indexOf("#"));
+            String number = contact.substring(contact.indexOf("#")+1);
+            System.out.printf("%-15s | %s\n", name, number);
+            System.out.println("-----------------------------");
         }
-
     }
 
-    public void searchContacts() {
+
+    public static void addContact(){
+        List<String> newEntry = new ArrayList<>();
+        String entry = ask.getString("Enter your name: (First Last)") +" #"+ ask.getInt("Enter your phone number: ");
+        newEntry.add(entry);
+
         try {
-            Path path = Paths.get("contacts.txt");
-            System.out.println(path);
-            System.out.println(Files.exists(path));
-            List<String> data = Files.readAllLines(Paths.get("contacts.txt"));
-            for (int i = 0; i < data.size(); ++i) {
-                String line = data.get(i);
-                System.out.printf("%s: %s\n", i + 1, line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
+            Files.write(Paths.get(path), newEntry, StandardOpenOption.APPEND);
+        }catch (IOException e){
+            System.out.println("Who Care!");
         }
-
     }
 
-    public static void deleteContact() {
-
+    public static void searchContacts(){
+        String name = ask.getString("What name do you want to find?: ");
+        List<String> results = new ArrayList<>();
+        for(String contact: slurp()){
+            if (contact.contains(name)){
+                results.add(contact);
+            }
+        }
+        printContacts(results);
     }
 
-    public static void main(String[] args) {
-        System.out.println("---------show contacts");
-        showContacts("contacts.txt");
-
-        List<String> newStuff = new ArrayList<>();
-        newStuff.add("test");
-        newStuff.add("test test test");
-
-        addContact("contacts.txt",newStuff);
-
-        System.out.println("---------show contacts");
-        showContacts("contacts.txt");
-    }
 }
-
-
-
-
-
